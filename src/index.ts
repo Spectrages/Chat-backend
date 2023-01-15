@@ -5,6 +5,12 @@ import { UserController } from './controllers'
 
 const PORT: number= 5000;
 
+// const OPTIONS = {
+//     useNewUrlParser: true,
+//     useCreateIndex: true,
+//     useFindAndModify: true
+// };
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -15,8 +21,10 @@ mongoose.connect(MONGODB);
 const User = new UserController();
 
 
-app.get(`/user/:id`, User.index);
+app.get(`/user/:id`, User.getOne);
+app.get(`/users`, User.getAll);
 app.post("/registration", User.create);
+app.delete(`/delete/:id`, User.delete);
 
 app.listen(PORT, function(){
     console.log(`Server started on port ${PORT}`)
