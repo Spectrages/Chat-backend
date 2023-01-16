@@ -16,15 +16,6 @@ class UserController {
 
     };
 
-    getAll(req: express.Request, res: express.Response) {
-        try{
-            const users = UserModel.find().exec();
-            res.json(users);
-        } catch (e) {
-            res.status(500).json({message: "Failed to getting users list"});
-        }
-    };
-
     create(req: express.Request, res: express.Response) {
         const postData = {
             email: req.body.email,

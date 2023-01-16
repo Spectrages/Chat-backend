@@ -2,31 +2,31 @@ import mongoose from 'mongoose'
 import { Schema, Document } from 'mongoose'
 
 export interface IMessage extends Document {
-    _id:string,
-    author: string,
-    partner: string,
-    text: string,
-    dialogue: string,
-    unread: boolean,
-}
+    unread: boolean;
+    text: {
+        type: string,
+        require: boolean,
+    };
+    dialog: {
+        type: Schema.Types.ObjectId,
+        ref: string,
+        require: true,
+    };
+};
 
 const MessageSchema = new Schema({
-    author: {
-        type: String,
-    },
-    partner: {
-        type: String,
-    },
+
     text: {
         type: String,
+        require: Boolean
     },
-    dialogue: {
-        type: String,
+
+    lastMessage: {
+        type: Schema.Types.ObjectId,
+        ref: "Dialogue"
     },
-    unread: {
-        type: Boolean,
-        default: false,
-    },
+    //attachments
+    unread: Boolean,
 
 }, {
     timestamps: true
