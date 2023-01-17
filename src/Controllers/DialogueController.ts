@@ -1,19 +1,19 @@
 import express from "express";
-import { DialogueModel } from '../models'
+import { DialogueModel, MessageModel } from '../Models'
 
 class DialogueController {
 
-    getOne(req: express.Request, res: express.Response) {
+    index(req: express.Request, res: express.Response) {
         const ownerId: string = req.params.id;
         DialogueModel
             .find({ owner: ownerId })
             .populate(["owner", "partner"])
             .exec(function (err, dialogues) {
                 if(err) {
-                    return res.status(400).send({
-                        message: `Dialogues not found, reason - ${err}`
+                    return res.status(400).json({
+                        message: `Dialogues not found`
                     });
-                };
+                }
                 return res.json(dialogues);
             });
     };
@@ -26,11 +26,23 @@ class DialogueController {
         const dialogue = new DialogueModel(postData);
         dialogue
             .save()
-            .then((obj: unknown) => {
-                return res.json(obj);
+            .then((dialogueObj: any) => {
+                const message = new MessageModel({
+                    user: req.body.owner,
+                    text: req.body.text,
+                    dialogue: dialogueObj._id,
+                });
+                message
+                    .save()
+                    .then(() => {
+                        res.json(dialogueObj);
+                    })
+                    .catch(error => {
+                        res.json(error)
+                    });
             })
             .catch(reason => {
-                return res.json(reason);
+                res.json(reason);
             });
     };
 

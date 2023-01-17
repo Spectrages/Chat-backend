@@ -6,10 +6,12 @@ export interface IUser extends Document {
     password: string,
     fullname: string,
     confirmed: boolean,
-    avatar: string,
-    confirm_hash: string,
-    last_seen: Date,
+    avatar?: string,
+    confirm_hash?: string,
+    last_seen?: Date,
 }
+
+//TODO: last seen
 
 const UserSchema = new Schema({
     email: {
@@ -32,7 +34,10 @@ const UserSchema = new Schema({
     },
     avatar: String,
     confirm_hash: String,
-    last_seen: Date,
+    last_seen: {
+        type: Date,
+        default: new Date()
+    },
 }, {
     timestamps: true
 });

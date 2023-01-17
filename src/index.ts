@@ -1,9 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from "body-parser";
-import { UserController, DialogueController, MessagesController } from './controllers'
-
-const PORT: number= 5000;
+import {
+    UserController,
+    DialogueController,
+    MessagesController
+} from './Controllers'
+import { updateLastSeen } from "./Middleware";
+import dotenv from 'dotenv'
+import {stringify} from "querystring";
 
 // const OPTIONS = {
 //     useNewUrlParser: true,
@@ -13,8 +18,10 @@ const PORT: number= 5000;
 
 const app = express();
 app.use(bodyParser.json());
+app.use(updateLastSeen);
+dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://spectrages:Spectrages15011997@cluster0.orfyg2s.mongodb.net/?retryWrites=true&w=majority";
+const MONGODB_URI: string = process.env.MONGODB_URI || '';
 mongoose.set('strictQuery', false);
 mongoose.connect(MONGODB_URI)
     .then(() => console.log(`Database started`))
@@ -25,18 +32,18 @@ const Dialogue = new DialogueController();
 const Messages = new MessagesController();
 
 
-app.get(`/user/:id`, User.getOne);
+app.get(`/user/:id`, User.index);
 app.delete(`/user/:id`, User.delete);
 app.post("/registration", User.create);
 
-app.get(`/dialogues/:id`, Dialogue.getOne);
+app.get(`/dialogues/:id`, Dialogue.index);
 app.delete(`/dialogues/:id`, Dialogue.delete);
 app.post(`/dialogues`, Dialogue.create);
 
-app.get(`/messages`, Messages.getOne);
-// app.delete(`/messages/:id`, Messages.delete);
-// app.post(`/messages`, Messages.create);
+app.get(`/messages`, Messages.index);
+app.delete(`/messages/:id`, Messages.delete);
+app.post(`/messages`, Messages.create);
 
-app.listen(PORT, function(){
-    console.log(`Server started on port ${PORT}`)
+app.listen(process.env.PORT, function(){
+    console.log(`Server started on port ${process.env.PORT}`)
 });

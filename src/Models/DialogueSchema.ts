@@ -5,12 +5,12 @@ export interface IDialogue extends Document {
     owner: {
         type: Schema.Types.ObjectId,
         ref: string,
-        require: true,
+        require: boolean,
     };
     partner: {
         type: Schema.Types.ObjectId,
         ref: string,
-        require: true,
+        require: boolean,
     };
     messages: [{
         type: Schema.Types.ObjectId,
@@ -29,15 +29,13 @@ const DialogueSchema = new Schema({
         ref: `User`,
         require: true,
     },
-    lastMessage: [
-        {
+    lastMessage: {
         type: Schema.Types.ObjectId,
         ref: `Message`,
-    }
-    ],
+    },
 }, {
     timestamps: true
 });
 
-const DialogueModel = mongoose.model<IDialogue>("Dialogues", DialogueSchema);
+const DialogueModel = mongoose.model<IDialogue>("Dialogue", DialogueSchema);
 export default DialogueModel;

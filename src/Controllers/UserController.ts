@@ -1,9 +1,9 @@
 import express from "express";
-import { UserModel } from '../models'
+import { UserModel } from '../Models'
 
 class UserController {
 
-    getOne(req: express.Request, res: express.Response) {
+    index(req: express.Request, res: express.Response) {
         const id: string = req.params.id;
         UserModel.findById(id, (err: unknown, user: unknown) => {
             if (err) {
